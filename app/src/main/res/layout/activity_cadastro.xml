@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cadastro"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".ActivityCadastro">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ImageViewLogoRumoCerto"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:translationY="-15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            app:srcCompat="@drawable/logo_rumocerto" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/MaterialCardViewBloco"
+            android:layout_width="295dp"
+            android:layout_height="412dp"
+            android:layout_margin="16dp"
+            android:translationY="-30dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ImageViewLogoRumoCerto"
+            app:layout_constraintVertical_bias="0.0">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="412dp"
+                android:background="#FFFFFF"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/TextViewCadastrese"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/roboto_condensed_bold"
+                    android:shadowColor="#80000000"
+                    android:shadowDx="2"
+                    android:shadowDy="2"
+                    android:shadowRadius="8"
+                    android:text="Cadastre-se!"
+                    android:textColor="#43A5FF"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:translationY="25dp" />
+
+                <TextView
+                    android:id="@+id/TextViewTemUmaConta"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto"
+                    android:text="Tem uma conta?"
+                    android:textColor="#000000"
+                    android:textSize="11sp"
+                    android:translationX="90dp"
+                    android:translationY="20dp" />
+
+                <TextView
+                    android:id="@+id/TextViewEntrar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="IrParaLogin"
+                    android:text="@string/EntrarSublinhado"
+                    android:textColor="#000000"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:translationX="175dp"
+                    android:translationY="5dp"
+                    tools:ignore="TouchTargetSizeCheck" />
+
+                <TextView
+                    android:id="@+id/TextViewEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto"
+                    android:text="E-mail"
+                    android:textSize="16sp"
+                    android:translationX="20sp"
+                    android:translationY="20dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/BlocoEmail"
+                    android:layout_width="260sp"
+                    android:layout_height="40sp"
+                    android:layout_gravity="center"
+                    android:layout_margin="8dp"
+                    android:translationY="20dp"
+                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="6dp"
+                    app:endIconMode="password_toggle">
+
+                    <ImageView
+                        android:id="@+id/ImageViewUser"
+                        android:layout_width="35dp"
+                        android:layout_height="30dp"
+                        android:translationY="5dp"
+                        app:srcCompat="@drawable/imguser" />
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/TextInputEmail"
+                        android:layout_width="204dp"
+                        android:layout_height="48dp"
+                        android:background="@android:color/transparent"
+                        android:hint="Insira o seu e-mail"
+                        android:textSize="12sp"
+                        android:translationX="40dp"
+                        android:translationY="-3dp"/>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/TextViewSenha"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto"
+                    android:text="Senha"
+                    android:textSize="16sp"
+                    android:translationX="20sp"
+                    android:translationY="20dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/BlocoSenha"
+                    android:layout_width="260dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="8dp"
+                    android:translationY="20dp"
+                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="6dp">
+
+                    <ImageView
+                        android:id="@+id/ImageViewSenha"
+                        android:layout_width="35dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
+                        app:srcCompat="@drawable/imgcadeado" />
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/TextInputSenha"
+                        android:layout_width="170dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@android:color/transparent"
+                        android:hint="Insira a senha"
+                        android:textSize="12sp"
+                        android:translationX="40dp" />
+
+                    <ImageView
+                        android:id="@+id/ImageViewOlhoSenha"
+                        android:layout_width="35dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
+                        android:translationX="215dp"
+                        app:srcCompat="@drawable/imgolhovisibilidade" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/TextViewSenhaNovamente"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto"
+                    android:text="Senha novamente"
+                    android:textSize="16sp"
+                    android:translationX="20sp"
+                    android:translationY="20dp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/BlocoSenhaNovamente"
+                    android:layout_width="260dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="8dp"
+                    android:translationY="20dp"
+                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="6dp">
+
+                    <ImageView
+                        android:id="@+id/ImageViewSenhaNovamente"
+                        android:layout_width="35dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
+                        app:srcCompat="@drawable/imgcadeado" />
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/TextInputSenhaNovamente"
+                        android:layout_width="170dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@android:color/transparent"
+                        android:hint="Senha novamente"
+                        android:textSize="12sp"
+                        android:translationX="40dp" />
+
+                    <ImageView
+                        android:id="@+id/ImageViewOlhoSenhaNovamente"
+                        android:layout_width="35dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_vertical"
+                        android:translationX="215dp"
+                        app:srcCompat="@drawable/imgolhovisibilidade" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/ButtonCadastrar"
+                    android:layout_width="166dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/btn_textura"
+                    android:elevation="8dp"
+                    android:stateListAnimator="@null"
+                    android:text="Cadastrar"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:translationY="30dp"
+                    app:backgroundTint="#61B8FF"
+                    tools:ignore="TouchTargetSizeCheck" />
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

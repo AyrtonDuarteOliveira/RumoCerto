@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">RumoCerto</string>
+    <string name="EntrarSublinhado"><u>Entrar</u></string>
+    <string name="CriarContaSublinhado"><u>Criar uma conta</u></string>
+</resources>
