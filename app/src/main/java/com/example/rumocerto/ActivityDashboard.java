@@ -18,10 +18,12 @@ import java.util.List;
 import java.util.Locale;
 
 public class ActivityDashboard extends ActivityMetodos {
-    LinearLayout button_metas, button_financas;
+    LinearLayout button_metas, button_financas, button_sair;
     TextView txtResumoSaldo, txtResumoEntradas, txtResumoSaidas;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        DBHelper dbHelper = new DBHelper(ActivityDashboard.this);
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_dashboard);
@@ -51,6 +53,14 @@ public class ActivityDashboard extends ActivityMetodos {
             @Override
             public void onClick(View view) {
                 IrParaFinancas(view, intent.getIntExtra("usuario_id", -1));
+            }
+        });
+        button_sair = findViewById(R.id.BotaoSair);
+        button_sair.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dbHelper.CreateLog(intent.getIntExtra("usuario_id", -1), "Logout Realizado:\nID: {" + intent.getIntExtra("usuario_id", -1) + "}\nData: {" + System.currentTimeMillis() + "}");
+                IrParaLogin(view);
             }
         });
     }

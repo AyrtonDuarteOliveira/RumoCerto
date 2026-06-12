@@ -105,7 +105,7 @@ public class ActivityEditaMeta extends ActivityMetodos {
                         return;
                     }
                     // Chama o metodo de UPDATE no banco
-                    boolean sucesso = dbHelper.UpdateMeta(metaId, nome, desc, dataInicioLong, dataFimLong, tipo);
+                    boolean sucesso = dbHelper.UpdateMeta(metaId, usuarioId, nome, desc, dataInicioLong, dataFimLong, tipo);
 
                     if (sucesso) {
                         Toast.makeText(ActivityEditaMeta.this, "Meta atualizada!", Toast.LENGTH_SHORT).show();
@@ -127,7 +127,7 @@ public class ActivityEditaMeta extends ActivityMetodos {
                     .setTitle("Excluir Meta")
                     .setMessage("Tem certeza que deseja apagar esta meta?")
                     .setPositiveButton("Sim", (dialog, which) -> {
-                        if (dbHelper.DeleteMeta(metaId)) {
+                        if (dbHelper.DeleteMeta(metaId, usuarioId)) {
                             Toast.makeText(this, "Meta excluída", Toast.LENGTH_SHORT).show();
                             IrParaMetas(v, usuarioId);
                         }

@@ -37,9 +37,13 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String FINANCAS_VALOR = "FINANCAS_VALOR";
     public static final String FINANCAS_DATA = "FINANCAS_DATA";
     public static final String FINANCAS_DESCRICAO = "FINANCAS_DESCRICAO";
+    public static final String LOGS_TABELA = "LOGS_TABELA";
+    public static final String LOGS_USUARIO_ID = "LOGS_USUARIO_ID";
+    public static final String LOGS_ACAO = "LOGS_ACAO";
+    public static final String LOGS_DATA = "LOGS_DATA";
 
 
-    public DBHelper(@Nullable Context context) { super(context, "usuarios.db", null, 4);}
+    public DBHelper(@Nullable Context context) { super(context, "usuarios.db", null, 6);}
     @Override
     public void onCreate(SQLiteDatabase db) {
         String criaTabelaUsuarios = "CREATE TABLE " + USUARIOS_TABELA + " (" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + USUARIO_EMAIL + " TEXT UNIQUE NOT NULL, " + USUARIO_SENHA + " TEXT NOT NULL, " + USUARIO_CREATEDAT + " INTEGER NOT NULL, " + USUARIO_ATIVO + " INTEGER DEFAULT 1, " + USUARIO_ULTIMOLOGIN + " INTEGER NOT NULL, " + USUARIO_TENTATIVASLOGIN + " INTEGER DEFAULT 0, " + USUARIO_BLOQUEADOATE + " INTEGER" + ")";
@@ -48,6 +52,8 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(criaTabelaMetas);
         String criaTabelaFinancas = "CREATE TABLE " + FINANCAS_TABELA + " (" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + FINANCAS_USUARIO_ID + " INTEGER NOT NULL, " + FINANCAS_TIPO + " TEXT NOT NULL, " + FINANCAS_VALOR + " INTEGER NOT NULL, " + FINANCAS_DESCRICAO + " TEXT NOT NULL, " + FINANCAS_DATA + " INTEGER NOT NULL, FOREIGN KEY (" + FINANCAS_USUARIO_ID + ") REFERENCES " + USUARIOS_TABELA + "(" + ID + ")" + " ON DELETE CASCADE " + ")";
         db.execSQL(criaTabelaFinancas);
+        String criaTabelaLogs = "CREATE TABLE " + LOGS_TABELA + " (" + ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " + LOGS_USUARIO_ID + " INTEGER NOT NULL, " + LOGS_ACAO + " TEXT NOT NULL, " + LOGS_DATA + " INTEGER NOT NULL, FOREIGN KEY (" + LOGS_USUARIO_ID + ") REFERENCES " + USUARIOS_TABELA + "(" + ID + ")" + " ON DELETE CASCADE " + ")";
+        db.execSQL(criaTabelaLogs);
     }
     @Override
     public void onConfigure(SQLiteDatabase db) {
@@ -66,6 +72,11 @@ public class DBHelper extends SQLiteOpenHelper {
         insertValues.put(USUARIO_ULTIMOLOGIN, System.currentTimeMillis());
         insertValues.put(USUARIO_BLOQUEADOATE, 0);
         long insert = db.insert(USUARIOS_TABELA,null, insertValues);
+        if (insert != -1)
+        {
+            CreateLog((int)insert, "Registro Conta Criado:\nID: {" + (int)insert + "}\nE-mail: {" + email.replace("'", "''") + "}\nSenha: {" + senha.replace("'", "''") + "}");
+        }
+
         return insert != -1;
     }
     public boolean CreateMeta(int usuario_id, String nome, String descricao, long data_inicio, long data_final, String tipo)
@@ -79,6 +90,11 @@ public class DBHelper extends SQLiteOpenHelper {
         insertValues.put(METAS_DATA_FINAL, data_final);
         insertValues.put(METAS_TIPO, tipo.replace("'","''"));
         long insert = db.insert(METAS_TABELA,null, insertValues);
+        if (insert != -1)
+        {
+            CreateLog(usuario_id, "Registro Meta Criado:\nID: {" + (int)insert + "}\nNome: {" + nome.replace("'", "''") + "}\nDescrição: {" + descricao.replace("'", "''") + "}\nData Início: {" + data_inicio + "}\nData Final: {" + data_final + "}\nTipo: {" + tipo.replace("'", "''") + "}");
+        }
+
         return insert != -1;
     }
     public boolean CreateFinanca(int usuario_id, String tipo, long valor, String descricao)
@@ -91,7 +107,24 @@ public class DBHelper extends SQLiteOpenHelper {
         insertValues.put(FINANCAS_DESCRICAO, descricao.replace("'","''"));
         insertValues.put(FINANCAS_DATA, System.currentTimeMillis());
         long insert = db.insert(FINANCAS_TABELA,null, insertValues);
+        if (insert != -1)
+        {
+            CreateLog(usuario_id, "Registro Finança Criado:\nID: {" + (int)insert + "}\nTipo: {" + tipo.replace("'", "''") + "}\nValor: {" + valor + "}\nDescrição: {" + descricao.replace("'", "''") + "}");
+        }
+
         return insert != -1;
+    }
+    public void CreateLog(int usuario_id, String acao) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues insertValues = new ContentValues();
+            insertValues.put(LOGS_USUARIO_ID, usuario_id);
+            insertValues.put(LOGS_ACAO, acao.replace("'", "''"));
+            insertValues.put(LOGS_DATA, System.currentTimeMillis());
+            db.insert(LOGS_TABELA, null, insertValues);
+        } catch (Exception e) {
+            Log.e("LOG_ERRO", "Erro ao registrar log: " + e.getMessage());
+        }
     }
     public int ReadUser(String email, String senha)
     {
@@ -105,6 +138,7 @@ public class DBHelper extends SQLiteOpenHelper {
             {
                 int indexid = cursor.getColumnIndex("ID");
                 int id = cursor.getInt(indexid);
+                CreateLog(id, "Tentativa De Login Realizada:\nID: {" + id + "}\nE-mail: {" + email + "}\nSenha: {" + senha + "}");
                 int indexativo = cursor.getColumnIndex(USUARIO_ATIVO);
                 int ativo = cursor.getInt(indexativo);
                 if (ativo == 0)
@@ -147,6 +181,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
                     dbWrite.update(USUARIOS_TABELA, values, "ID = ?", new String[]{String.valueOf(id)});
 
+                    CreateLog(id, "Login Realizado Com Sucesso:\nID: {" + id + "}\nE-mail: {" + email + "}\nSenha: {" + senha + "}");
                     return id;
                 }
                 else
@@ -293,9 +328,13 @@ public class DBHelper extends SQLiteOpenHelper {
         updateValues.put(USUARIO_EMAIL, email.replace("'","''"));
         updateValues.put(USUARIO_SENHA, senhaHash.replace("'","''"));
         long update = db.update(USUARIOS_TABELA, updateValues, "ID=" + id, null);
+        if (update >= 0)
+        {
+            CreateLog((int)update, "Senha Alterada:\nID: {" + (int)update + "}\nSenha: {" + senha.replace("'", "''") + "}");
+        }
         return update >= 0;
     }
-    public boolean UpdateMeta(int id, String nome, String descricao, long dataInicio, long dataFim, String tipo) {
+    public boolean UpdateMeta(int id, int usuario_id, String nome, String descricao, long dataInicio, long dataFim, String tipo) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(METAS_NOME, nome);
@@ -304,7 +343,12 @@ public class DBHelper extends SQLiteOpenHelper {
         values.put(METAS_DATA_FINAL, dataFim);
         values.put(METAS_TIPO, tipo);
 
-        return db.update(METAS_TABELA, values, "ID = ?", new String[]{String.valueOf(id)}) > 0;
+        long update = db.update(METAS_TABELA, values, "ID = ?", new String[]{String.valueOf(id)});
+        if (update >= 0)
+        {
+            CreateLog((int)update, "Meta Alterada:\nID: {" + usuario_id + "}\nID Meta: {" + id + "}\nNome: {" + nome.replace("'", "''") + "}\nDescrição: {" + descricao.replace("'", "''") + "}\nData Início: {" + dataInicio + "}\nData Final: {" + dataFim + "}\nTipo: {" + tipo.replace("'", "''") + "}");
+        }
+        return update >= 0;
     }
     public boolean UpdateFinanca(int id, String tipo, long valor, String descricao) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -320,9 +364,14 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.delete(USUARIOS_TABELA, ID + "=" + id, null) > 0;
     }
-    public boolean DeleteMeta(int id) {
+    public boolean DeleteMeta(int id, int usuario_id) {
         SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete(METAS_TABELA, ID + "=" + id, null) > 0;
+        long delete = db.delete(METAS_TABELA, ID + "=" + id, null);
+        if (delete > 0)
+        {
+            CreateLog(usuario_id, "Meta Deletada:\nID: {" + usuario_id + "}\nID Meta: {" + id + "}");
+        }
+        return delete > 0;
     }
     public void DeleteAllMetas(int usuarioId) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -355,6 +404,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + USUARIOS_TABELA);
         db.execSQL("DROP TABLE IF EXISTS " + METAS_TABELA);
         db.execSQL("DROP TABLE IF EXISTS " + FINANCAS_TABELA);
+        db.execSQL("DROP TABLE IF EXISTS " + LOGS_TABELA);
 
         onCreate(db);
     }
